@@ -11,16 +11,15 @@ import {
 
 // 1. Konfigurasi Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyBeQs6HOAgjTCpYuHM8V4rU5hmMCjeEwjM",
+  // Mengambil API Key dari Environment Variable Vercel
+  apiKey: "AIzaSyBeQs6HOAgjTCpYuHM8V4rU5hmMCjeEwjM", 
   authDomain: "teranacoffe.firebaseapp.com",
-  databaseURL:
-    "https://teranacoffe-default-rtdb.asia-southeast1.firebasedatabase.app",
+  databaseURL: "https://teranacoffe-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "teranacoffe",
   storageBucket: "teranacoffe.firebasestorage.app",
   messagingSenderId: "392806775927",
   appId: "1:392806775927:web:708b3d0edd77c5ed45da72",
 };
-
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const menuRef = ref(db, "menu");
@@ -458,4 +457,5 @@ window.showToast = (msg) => {
 };
 
 initMenu();
+
 
