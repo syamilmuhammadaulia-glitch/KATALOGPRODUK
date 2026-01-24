@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TERANA CAFFE | Digital Menu</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Playfair+Display:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="navbar">
+        <div class="logo">TERANA <span>CAFFE</span></div>
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Cari menu favorit..."
+          />
+        </div>
+        <button class="btn-admin-login" onclick="openAdminModal()">
+          <i class="fas fa-user-shield"></i>
+        </button>
+      </div>
+      <div class="category-tabs" id="tabContainer">
+        <button class="tab-btn active" onclick="filterCategory('All')">
+          Semua
+        </button>
+        <button class="tab-btn" onclick="filterCategory('Coffee Utama')">
+          Coffee Utama
+        </button>
+        <button class="tab-btn" onclick="filterCategory('Black Series')">
+          Black Series
+        </button>
+        <button class="tab-btn" onclick="filterCategory('Kopsus Series')">
+          Kopsus Series
+        </button>
+        <button class="tab-btn" onclick="filterCategory('Botol 200ml')">
+          Botol 200ml
+        </button>
+        <button class="tab-btn" onclick="filterCategory('Non-Coffee')">
+          Non-Coffee
+        </button>
+        <button class="tab-btn" onclick="filterCategory('Makanan')">
+          Makanan
+        </button>
+        <button class="tab-btn" onclick="filterCategory('Extra')">Extra</button>
+      </div>
+    </header>
+
+    <main class="container">
+      <div id="productGrid" class="product-grid"></div>
+    </main>
+
+    <div class="cart-trigger" onclick="toggleCart()">
+      <i class="fas fa-shopping-bag"></i>
+      <span id="cartCount">0</span>
+    </div>
+
+    <div id="cartPanel" class="side-panel">
+      <div class="panel-header">
+        <h3>Pesanan Anda</h3>
+        <button onclick="toggleCart()" class="close-x">&times;</button>
+      </div>
+      <div id="cartItems" class="panel-body"></div>
+      <div class="panel-footer">
+        <div class="total-row">
+          <span>Total:</span><span id="totalPrice">Rp 0</span>
+        </div>
+        <button class="btn-checkout" onclick="sendWhatsApp()">
+          <i class="fab fa-whatsapp"></i> Pesan Sekarang
+        </button>
+      </div>
+    </div>
+
+    <div id="adminModal" class="modal">
+      <div class="modal-content">
+        <button class="close-x-modal" onclick="closeAdminModal()">
+          &times;
+        </button>
+        <div id="loginSection" class="auth-card">
+          <div class="auth-icon"><i class="fas fa-coffee"></i></div>
+          <h2>Admin Terana</h2>
+          <input
+            type="password"
+            id="adminPass"
+            placeholder="Password (TERANA)"
+          />
+          <button onclick="doLogin()" class="btn-full">Buka Akses</button>
+        </div>
+        <div id="adminAction" style="display: none">
+          <h3>Kelola Menu</h3>
+          <div class="admin-scroll">
+            <form id="addForm">
+              <input type="text" id="pName" placeholder="Nama Menu" required />
+              <div class="row">
+                <input type="number" id="pPrice" placeholder="Harga" required />
+                <select id="pCategory">
+                  <option value="Coffee Utama">Coffee Utama</option>
+                  <option value="Black Series">Black Series</option>
+                  <option value="Kopsus Series">Kopsus Series</option>
+                  <option value="Botol 200ml">Botol 200ml</option>
+                  <option value="Non-Coffee">Non-Coffee</option>
+                  <option value="Makanan">Makanan</option>
+                  <option value="Extra">Extra</option>
+                </select>
+              </div>
+              <label class="file-label"
+                ><i class="fas fa-image"></i> Pilih Foto<input
+                  type="file"
+                  id="pImg"
+                  accept="image/*"
+              /></label>
+              <button type="submit" class="btn-full">Simpan ke Cloud</button>
+            </form>
+            <hr />
+            <div id="adminList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast">Produk ditambahkan!</div>
+    <script type="module" src="script.js"></script>
+  </body>
+</html>
