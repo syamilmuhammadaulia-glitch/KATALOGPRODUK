@@ -458,3 +458,4 @@ window.showToast = (msg) => {
 };
 
 initMenu();
+
