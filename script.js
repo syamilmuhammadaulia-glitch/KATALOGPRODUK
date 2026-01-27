@@ -11,15 +11,16 @@ import {
 
 // 1. Konfigurasi Firebase
 const firebaseConfig = {
-  // Mengambil API Key dari Environment Variable Vercel
-  apiKey: "AIzaSyBeQs6HOAgjTCpYuHM8V4rU5hmMCjeEwjM", 
+  apiKey: "AIzaSyBeQs6HOAgjTCpYuHM8V4rU5hmMCjeEwjM",
   authDomain: "teranacoffe.firebaseapp.com",
-  databaseURL: "https://teranacoffe-default-rtdb.asia-southeast1.firebasedatabase.app",
+  databaseURL:
+    "https://teranacoffe-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "teranacoffe",
   storageBucket: "teranacoffe.firebasestorage.app",
   messagingSenderId: "392806775927",
   appId: "1:392806775927:web:708b3d0edd77c5ed45da72",
 };
+
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const menuRef = ref(db, "menu");
@@ -27,6 +28,7 @@ const menuRef = ref(db, "menu");
 let products = [];
 let cart = [];
 let activeCat = "All";
+let currentSelectItem = null; // Untuk melacak item yang sedang dipilih opsinya
 
 // 2. Data Default
 const defaultMenu = [
@@ -115,36 +117,6 @@ const defaultMenu = [
     img: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=300",
   },
   {
-    name: "Langit Pagi 200ml",
-    price: 15000,
-    category: "Botol 200ml",
-    img: "https://images.unsplash.com/photo-1551046710-23b9d6a2f392?w=300",
-  },
-  {
-    name: "Peluk Hangat 200ml",
-    price: 23000,
-    category: "Botol 200ml",
-    img: "https://images.unsplash.com/photo-1623067176280-ad723d888c4b?w=300",
-  },
-  {
-    name: "Spanish Latte 200ml",
-    price: 23000,
-    category: "Botol 200ml",
-    img: "https://images.unsplash.com/photo-1623067176280-ad723d888c4b?w=300",
-  },
-  {
-    name: "Sanger Coffee 200ml",
-    price: 23000,
-    category: "Botol 200ml",
-    img: "https://images.unsplash.com/photo-1623067176280-ad723d888c4b?w=300",
-  },
-  {
-    name: "Coffee Latte 200ml",
-    price: 23000,
-    category: "Botol 200ml",
-    img: "https://images.unsplash.com/photo-1623067176280-ad723d888c4b?w=300",
-  },
-  {
     name: "Matcha Blizz",
     price: 20000,
     category: "Non-Coffee",
@@ -157,76 +129,10 @@ const defaultMenu = [
     img: "https://images.unsplash.com/photo-1544787210-2211d74fc59c?w=300",
   },
   {
-    name: "Pandan Milk",
-    price: 17000,
-    category: "Non-Coffee",
-    img: "https://images.unsplash.com/photo-1556881286-fc6915169721?w=300",
-  },
-  {
-    name: "Choco Matcha",
-    price: 20000,
-    category: "Non-Coffee",
-    img: "https://images.unsplash.com/photo-1536882247184-57482f3c0383?w=300",
-  },
-  {
-    name: "Choco Berry",
-    price: 20000,
-    category: "Non-Coffee",
-    img: "https://images.unsplash.com/photo-1546039907-7fa05f663cc8?w=300",
-  },
-  {
-    name: "Pure Matcha",
-    price: 17000,
-    category: "Non-Coffee",
-    img: "https://images.unsplash.com/photo-1582782630126-b1062ee469f1?w=300",
-  },
-  {
-    name: "Strawberry Milk",
-    price: 17000,
-    category: "Non-Coffee",
-    img: "https://images.unsplash.com/photo-1546039907-7fa05f663cc8?w=300",
-  },
-  {
-    name: "Matchaberry",
-    price: 25000,
-    category: "Non-Coffee",
-    img: "https://images.unsplash.com/photo-1582782630126-b1062ee469f1?w=300",
-  },
-  {
     name: "Cireng Isi, kuah keju",
     price: 15000,
     category: "Makanan",
     img: "cireng.jpeg",
-  },
-  {
-    name: "Extra Shot",
-    price: 5000,
-    category: "Extra",
-    img: "https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=300",
-  },
-  {
-    name: "Brown Sugar",
-    price: 3000,
-    category: "Extra",
-    img: "https://images.unsplash.com/photo-1608331109409-90605a92a7e4?w=300",
-  },
-  {
-    name: "Oat Milk",
-    price: 7000,
-    category: "Extra",
-    img: "https://images.unsplash.com/photo-1635345710645-ec7590800c8b?w=300",
-  },
-  {
-    name: "Stevia",
-    price: 3000,
-    category: "Extra",
-    img: "https://images.unsplash.com/photo-1596434449176-0683038670c5?w=300",
-  },
-  {
-    name: "Protein 25gr",
-    price: 13000,
-    category: "Extra",
-    img: "https://images.unsplash.com/photo-1593095948071-474c5cc2989d?w=300",
   },
 ];
 
@@ -249,7 +155,7 @@ onValue(menuRef, (snap) => {
   renderAdminList();
 });
 
-// 5. Logika Katalog
+// 5. Logika Katalog & Render Card
 window.filterCategory = (cat) => {
   activeCat = cat;
   document
@@ -312,13 +218,43 @@ function renderCard(p) {
     </div>`;
 }
 
-// 6. Keranjang
+// 6. Logika Keranjang & Opsi
 window.addToCart = (id) => {
   const p = products.find((x) => x.id === id);
   if (!p) return;
-  const ex = cart.find((x) => x.id === id);
-  ex ? ex.qty++ : cart.push({ ...p, qty: 1 });
+
+  currentSelectItem = p;
+  document.getElementById("optItemId").value = id;
+  document.getElementById("optItemName").innerText = p.name;
+  document.getElementById("optSugar").value = "Normal Sugar";
+  document.getElementById("optIce").value = "Normal Ice";
+  document.getElementById("optNote").value = "";
+
+  document.getElementById("optionsModal").style.display = "flex";
+};
+
+window.closeOptionsModal = () => {
+  document.getElementById("optionsModal").style.display = "none";
+};
+
+window.confirmAddToCart = () => {
+  const id = document.getElementById("optItemId").value;
+  const sugar = document.getElementById("optSugar").value;
+  const ice = document.getElementById("optIce").value;
+  const note = document.getElementById("optNote").value;
+  const p = currentSelectItem;
+
+  const cartId = `${id}-${sugar}-${ice}-${note}`;
+  const ex = cart.find((x) => x.cartId === cartId);
+
+  if (ex) {
+    ex.qty++;
+  } else {
+    cart.push({ ...p, cartId, qty: 1, options: { sugar, ice, note } });
+  }
+
   updateUI();
+  closeOptionsModal();
   showToast(`${p.name} masuk keranjang!`);
 };
 
@@ -327,23 +263,29 @@ function updateUI() {
   const itemsContainer = document.getElementById("cartItems");
   const cartCount = document.getElementById("cartCount");
 
-  itemsContainer.innerHTML =
-    cart.length === 0
-      ? `<div style="text-align:center; padding:20px; color:#888;">Keranjang kosong</div>`
-      : cart
-          .map((i, idx) => {
-            tot += i.price * i.qty;
-            return `
-        <div class="cart-item-row" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #f0f0f0; padding-bottom:10px;">
-            <div style="flex:1">
-                <div style="font-weight:600; font-size:0.9rem">${i.name}</div>
-                <small style="color:#777">${i.qty} x Rp ${parseInt(i.price).toLocaleString()}</small>
-            </div>
-            <div style="font-weight:700; margin-right:15px;">Rp ${(i.price * i.qty).toLocaleString()}</div>
-            <span onclick="delCart(${idx})" style="color:#e74c3c; cursor:pointer;"><i class="fas fa-trash"></i></span>
-        </div>`;
-          })
-          .join("");
+  if (cart.length === 0) {
+    itemsContainer.innerHTML = `<div style="text-align:center; padding:20px; color:#888;">Keranjang kosong</div>`;
+  } else {
+    itemsContainer.innerHTML = cart
+      .map((i, idx) => {
+        tot += i.price * i.qty;
+        return `
+          <div class="cart-item-row" style="display:flex; flex-direction:column; margin-bottom:15px; border-bottom:1px solid #f0f0f0; padding-bottom:10px;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div style="flex:1">
+                    <div style="font-weight:600; font-size:0.9rem">${i.name}</div>
+                    <small style="color:#777">${i.qty} x Rp ${parseInt(i.price).toLocaleString()}</small>
+                </div>
+                <div style="font-weight:700; margin-right:15px;">Rp ${(i.price * i.qty).toLocaleString()}</div>
+                <span onclick="delCart(${idx})" style="color:#e74c3c; cursor:pointer;"><i class="fas fa-trash"></i></span>
+              </div>
+              <div style="font-size: 0.75rem; color: #888; margin-top: 5px; background: #f9f9f9; padding: 5px; border-radius: 4px;">
+                Opsi: ${i.options.sugar}, ${i.options.ice} ${i.options.note ? `<br>Note: ${i.options.note}` : ""}
+              </div>
+          </div>`;
+      })
+      .join("");
+  }
 
   document.getElementById("totalPrice").innerText =
     `Rp ${tot.toLocaleString()}`;
@@ -355,21 +297,25 @@ window.delCart = (i) => {
   cart.splice(i, 1);
   updateUI();
 };
+
 window.toggleCart = () =>
   document.getElementById("cartPanel")?.classList.toggle("active");
 
-// 7. WhatsApp
+// 7. WhatsApp dengan Detail Opsi
 window.sendWhatsApp = () => {
   if (!cart.length) return alert("Keranjang masih kosong!");
   let t = "*PESANAN TERANA CAFFE*\n---------------------------\n";
   cart.forEach((i) => {
-    t += `• ${i.name} (${i.qty}x) = Rp ${(i.price * i.qty).toLocaleString()}\n`;
+    t += `• *${i.name}* (${i.qty}x)\n`;
+    t += `  [${i.options.sugar}, ${i.options.ice}]\n`;
+    if (i.options.note) t += `  Catatan: ${i.options.note}\n`;
+    t += `  Subtotal: Rp ${(i.price * i.qty).toLocaleString()}\n\n`;
   });
   t += `---------------------------\n*TOTAL: ${document.getElementById("totalPrice").innerText}*`;
   window.open(`https://wa.me/62859106960106?text=${encodeURIComponent(t)}`);
 };
 
-// 8. Admin
+// 8. Admin & Cloud Sync
 window.openAdminModal = () =>
   (document.getElementById("adminModal").style.display = "flex");
 window.closeAdminModal = () =>
@@ -403,7 +349,6 @@ if (addForm) {
         alert(`Berhasil! ${name} ditambahkan.`);
       });
     };
-
     if (f) {
       const r = new FileReader();
       r.onload = () => save(r.result);
@@ -432,7 +377,7 @@ window.delDB = (id) => {
   if (confirm("Hapus selamanya?")) remove(ref(db, `menu/${id}`));
 };
 
-// 9. Search
+// 9. Search & Toast
 const sInput = document.getElementById("searchInput");
 if (sInput) {
   sInput.addEventListener("input", (e) => {
@@ -443,7 +388,6 @@ if (sInput) {
   });
 }
 
-// 10. Toast
 window.showToast = (msg) => {
   const t = document.getElementById("toast");
   if (!t) return;
@@ -457,5 +401,3 @@ window.showToast = (msg) => {
 };
 
 initMenu();
-
-
