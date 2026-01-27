@@ -29,7 +29,11 @@
         <button class="btn-admin-login" onclick="openAdminModal()">
           <i class="fas fa-user-shield"></i>
         </button>
+        <div class="logo">
+          <img src="logo.jpeg" alt="TERANA CAFFE" />
+        </div>
       </div>
+
       <div class="category-tabs" id="tabContainer">
         <button class="tab-btn active" onclick="filterCategory('All')">
           Semua
@@ -92,7 +96,7 @@
           <input
             type="password"
             id="adminPass"
-            placeholder="********"
+            placeholder="Password (TERANA)"
           />
           <button onclick="doLogin()" class="btn-full">Buka Akses</button>
         </div>
@@ -127,9 +131,47 @@
         </div>
       </div>
     </div>
+    <div id="optionsModal" class="modal">
+      <div class="modal-content">
+        <button class="close-x-modal" onclick="closeOptionsModal()">
+          &times;
+        </button>
+        <h3 id="optItemName">Nama Menu</h3>
+        <hr style="margin: 15px 0" />
+
+        <div class="option-group">
+          <label><b>Tingkat Gula:</b></label>
+          <select id="optSugar">
+            <option value="Normal Sugar">Normal Sugar</option>
+            <option value="Less Sugar">Less Sugar</option>
+          </select>
+        </div>
+
+        <div class="option-group">
+          <label><b>Jumlah Es:</b></label>
+          <select id="optIce">
+            <option value="Normal Ice">Normal Ice</option>
+            <option value="Less Ice">Less Ice</option>
+          </select>
+        </div>
+
+        <div class="option-group">
+          <label><b>Catatan:</b></label>
+          <textarea
+            id="optNote"
+            placeholder="Contoh: Tanpa sedotan, kopi lebih strong, dll"
+            rows="3"
+          ></textarea>
+        </div>
+
+        <input type="hidden" id="optItemId" />
+        <button onclick="confirmAddToCart()" class="btn-full">
+          Tambahkan ke Keranjang
+        </button>
+      </div>
+    </div>
 
     <div id="toast" class="toast">Produk ditambahkan!</div>
     <script type="module" src="script.js"></script>
   </body>
 </html>
-
