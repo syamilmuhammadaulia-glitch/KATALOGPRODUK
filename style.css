@@ -326,3 +326,54 @@ textarea {
   opacity: 1;
   bottom: 110px;
 }
+
+.option-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+.option-group label {
+  display: block;
+  font-size: 0.85rem;
+  margin-bottom: 5px;
+  color: var(--brown);
+}
+.option-group select,
+.option-group textarea {
+  background: #fdfaf7;
+  border: 1px solid var(--tan);
+}
+#optionsModal .modal-content {
+  max-width: 350px;
+}
+/* Update CSS untuk Logo */
+.logo {
+  font-family: "Playfair Display", serif;
+  font-size: 1.5rem;
+  color: var(--brown);
+  font-weight: 800;
+  display: flex; /* Gunakan flexbox agar sejajar */
+  align-items: center; /* Tengah secara vertikal */
+  text-decoration: none;
+}
+
+.logo img {
+  height: 45px; /* Atur tinggi logo sesuai selera */
+  width: auto; /* Lebar otomatis agar tidak gepeng */
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+/* Efek sedikit interaksi saat logo disentuh */
+.logo:hover img {
+  transform: scale(1.05);
+}
+
+/* Responsif untuk HP agar logo tidak terlalu besar */
+@media (max-width: 480px) {
+  .logo {
+    font-size: 1.2rem;
+  }
+  .logo img {
+    height: 35px;
+  }
+}
