@@ -401,4 +401,3 @@ window.showToast = (msg) => {
 };
 
 initMenu();
-
