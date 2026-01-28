@@ -306,7 +306,7 @@ window.sendWhatsApp = () => {
   if (!cart.length) return alert("Keranjang masih kosong!");
   let t = "*PESANAN TERANA CAFFE*\n---------------------------\n";
   cart.forEach((i) => {
-    t += `• *${i.name}* (${i.qty}x)\n`;
+    t += `• ${i.name} (${i.qty}x)\n`;
     t += `  [${i.options.sugar}, ${i.options.ice}]\n`;
     if (i.options.note) t += `  Catatan: ${i.options.note}\n`;
     t += `  Subtotal: Rp ${(i.price * i.qty).toLocaleString()}\n\n`;
@@ -401,3 +401,4 @@ window.showToast = (msg) => {
 };
 
 initMenu();
+
