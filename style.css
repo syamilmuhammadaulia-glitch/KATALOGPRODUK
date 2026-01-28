@@ -377,3 +377,62 @@ textarea {
     height: 35px;
   }
 }
+/* --- FOOTER DEVELOPER --- */
+.footer-dev {
+  background: var(--white);
+  padding: 50px 20px 110px; /* Padding bawah 110px agar aman dari tombol floating cart */
+  text-align: center;
+  border-top: 1px solid rgba(74, 55, 40, 0.1);
+  margin-top: 40px;
+}
+
+.footer-dev p {
+  font-size: 0.9rem;
+  color: #888;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap; /* Agar rapi saat dibuka di HP layar kecil */
+}
+
+.ig-link {
+  color: var(--brown); /* Menggunakan variabel cokelat kamu */
+  text-decoration: none;
+  font-weight: 700;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+/* Efek garis bawah yang elegan saat di-hover */
+.ig-link::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 1.5px;
+  bottom: -2px;
+  left: 0;
+  background-color: var(--tan); /* Warna krem/tan kamu */
+  transition: width 0.3s ease;
+}
+
+.ig-link:hover {
+  color: var(--tan);
+}
+
+.ig-link:hover::after {
+  width: 100%;
+}
+
+/* Responsif untuk Mobile */
+@media (max-width: 480px) {
+  .footer-dev {
+    padding: 40px 15px 120px; /* Ruang lebih luas di HP */
+  }
+
+  .footer-dev p {
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+}
