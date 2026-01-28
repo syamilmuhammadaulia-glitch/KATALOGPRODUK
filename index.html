@@ -96,7 +96,7 @@
           <input
             type="password"
             id="adminPass"
-            placeholder="********"
+            placeholder="Password (TERANA)"
           />
           <button onclick="doLogin()" class="btn-full">Buka Akses</button>
         </div>
@@ -170,9 +170,26 @@
         </button>
       </div>
     </div>
+    <footer class="footer-dev">
+      <p>
+        &copy; 2026 |
+        <a
+          href="https://instagram.com/syamiiiiiiiiiil"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="ig-link"
+        >
+          Developed by Syamil Muhammad Aulia
+        </a>
+      </p>
+    </footer>
 
     <div id="toast" class="toast">Produk ditambahkan!</div>
+    <script>
+      // Script sederhana untuk update tahun otomatis
+      document.getElementById("currentYear").textContent =
+        new Date().getFullYear();
+    </script>
     <script type="module" src="script.js"></script>
   </body>
 </html>
-
