@@ -17,19 +17,24 @@
   <body>
     <header>
       <div class="navbar">
-        <div class="logo">TERANA <span>CAFFE</span></div>
-        <div class="search-box">
-          <i class="fas fa-search"></i>
+        <div class="logo-text">TERANA <span>CAFFE</span></div>
+        <div class="search-box" role="search">
+          <i class="fas fa-search" aria-hidden="true"></i>
           <input
-            type="text"
+            type="search"
             id="searchInput"
             placeholder="Cari menu favorit..."
+            aria-label="Cari menu"
           />
         </div>
-        <button class="btn-admin-login" onclick="openAdminModal()">
-          <i class="fas fa-user-shield"></i>
+        <button
+          class="btn-admin-login"
+          onclick="openAdminModal()"
+          aria-label="Login Admin"
+        >
+          <i class="fas fa-user-shield" aria-hidden="true"></i>
         </button>
-        <div class="logo">
+        <div class="logo-img">
           <img src="logo.jpeg" alt="TERANA CAFFE" />
         </div>
       </div>
@@ -38,6 +43,7 @@
         <button class="tab-btn active" onclick="filterCategory('All')">
           Semua
         </button>
+        <button class="tab-btn" onclick="filterCategory('Hot')">Hot</button>
         <button class="tab-btn" onclick="filterCategory('Coffee Utama')">
           Coffee Utama
         </button>
@@ -61,58 +67,98 @@
     </header>
 
     <main class="container">
-      <div id="productGrid" class="product-grid"></div>
+      <div id="productGrid" class="product-grid">
+        <div id="loadingMenu" class="loading-menu">
+          <div class="loading-spinner"></div>
+          <p>Memuat menu...</p>
+        </div>
+      </div>
     </main>
 
-    <div class="cart-trigger" onclick="toggleCart()">
-      <i class="fas fa-shopping-bag"></i>
-      <span id="cartCount">0</span>
-    </div>
+    <button
+      class="cart-trigger"
+      onclick="toggleCart()"
+      aria-label="Lihat keranjang"
+      aria-expanded="false"
+    >
+      <i class="fas fa-shopping-bag" aria-hidden="true"></i>
+      <span id="cartCount" aria-live="polite">0</span>
+    </button>
 
-    <div id="cartPanel" class="side-panel">
+    <aside
+      id="cartPanel"
+      class="side-panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="cartTitle"
+    >
       <div class="panel-header">
-        <h3>Pesanan Anda</h3>
-        <button onclick="toggleCart()" class="close-x">&times;</button>
+        <h3 id="cartTitle">Pesanan Anda</h3>
+        <button
+          onclick="toggleCart()"
+          class="close-x"
+          aria-label="Tutup keranjang"
+        >
+          &times;
+        </button>
       </div>
       <div id="cartItems" class="panel-body"></div>
       <div class="panel-footer">
         <div class="total-row">
           <span>Total:</span><span id="totalPrice">Rp 0</span>
         </div>
-        <button class="btn-checkout" onclick="sendWhatsApp()">
+        <button class="btn-checkout" onclick="openCheckoutModal()">
           <i class="fab fa-whatsapp"></i> Pesan Sekarang
         </button>
       </div>
-    </div>
+    </aside>
 
-    <div id="adminModal" class="modal">
+    <div
+      id="adminModal"
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="adminModalTitle"
+    >
       <div class="modal-content">
-        <button class="close-x-modal" onclick="closeAdminModal()">
+        <button
+          class="close-x-modal"
+          onclick="closeAdminModal()"
+          aria-label="Tutup"
+        >
           &times;
         </button>
         <div id="loginSection" class="auth-card">
-          <div class="auth-icon"><i class="fas fa-coffee"></i></div>
-          <h2>Admin Terana</h2>
+          <div class="auth-icon">
+            <i class="fas fa-coffee" aria-hidden="true"></i>
+          </div>
+          <h2 id="adminModalTitle">Admin Terana</h2>
+          <label for="adminPass" class="sr-only">Password Admin</label>
           <input
             type="password"
             id="adminPass"
-            placeholder="********"
+            placeholder="Masukkan password admin"
+            autocomplete="current-password"
           />
           <button onclick="doLogin()" class="btn-full">Buka Akses</button>
         </div>
-        <div id="adminAction" style="display: none">
+        <div id="adminAction" class="admin-action-hidden">
           <h3>Kelola Menu</h3>
           <div class="admin-scroll">
             <form id="addForm">
+              <label for="pName" class="sr-only">Nama Menu</label>
               <input type="text" id="pName" placeholder="Nama Menu" required />
               <div class="row">
+                <label for="pPrice" class="sr-only">Harga</label>
                 <input type="number" id="pPrice" placeholder="Harga" required />
+                <label for="pCategory" class="sr-only">Kategori</label>
                 <select id="pCategory">
                   <option value="Coffee Utama">Coffee Utama</option>
                   <option value="Black Series">Black Series</option>
                   <option value="Kopsus Series">Kopsus Series</option>
                   <option value="Botol 200ml">Botol 200ml</option>
                   <option value="Non-Coffee">Non-Coffee</option>
+                  <option value="Hot">Hot</option>
                   <option value="Makanan">Makanan</option>
                   <option value="Extra">Extra</option>
                 </select>
@@ -131,16 +177,127 @@
         </div>
       </div>
     </div>
-    <div id="optionsModal" class="modal">
+
+    <div
+      id="checkoutModal"
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="checkoutModalTitle"
+    >
+      <div class="modal-content modal-checkout">
+        <button
+          class="close-x-modal"
+          onclick="closeCheckoutModal()"
+          aria-label="Tutup"
+        >
+          &times;
+        </button>
+        <h3 id="checkoutModalTitle">Lengkapi Data Pesanan</h3>
+        <hr class="modal-hr" />
+
+        <div class="option-group">
+          <label for="checkoutName"><b>Nama Pembeli:</b></label>
+          <input
+            type="text"
+            id="checkoutName"
+            placeholder="Masukkan nama Anda"
+            required
+          />
+        </div>
+
+        <div class="option-group">
+          <label><b>Pengambilan:</b></label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" name="checkoutPickup" value="dine in" />
+              Dine in
+            </label>
+            <label class="radio-label">
+              <input
+                type="radio"
+                name="checkoutPickup"
+                value="take away"
+                checked
+              />
+              Take away
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="checkoutPickup" value="delivery" />
+              Delivery
+            </label>
+          </div>
+        </div>
+
+        <div class="option-group">
+          <label><b>Metode Pembayaran:</b></label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" name="checkoutPayment" value="Tunai" />
+              Tunai
+            </label>
+            <label class="radio-label">
+              <input
+                type="radio"
+                name="checkoutPayment"
+                value="QRIS"
+                id="paymentQris"
+              />
+              QRIS
+            </label>
+          </div>
+        </div>
+
+        <div id="qrisContainer" class="qris-container" style="display: none">
+          <p class="qris-info">
+            Scan QRIS di bawah ini untuk pembayaran, lalu kirim bukti pembayaran
+            di chat WhatsApp.
+          </p>
+          <img
+            src="qris.jpeg"
+            alt="QR Code pembayaran QRIS"
+            class="qris-image"
+            id="qrisImage"
+          />
+          <a
+            href="qris.jpeg"
+            download="QRIS-Terana-Caffe.jpeg"
+            class="btn-download-qris"
+          >
+            <i class="fas fa-download"></i> Download QRIS
+          </a>
+        </div>
+
+        <button
+          type="button"
+          class="btn-full btn-wa-checkout"
+          onclick="confirmSendWhatsApp()"
+        >
+          <i class="fab fa-whatsapp"></i> Kirim ke WhatsApp
+        </button>
+      </div>
+    </div>
+
+    <div
+      id="optionsModal"
+      class="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="optItemName"
+    >
       <div class="modal-content">
-        <button class="close-x-modal" onclick="closeOptionsModal()">
+        <button
+          class="close-x-modal"
+          onclick="closeOptionsModal()"
+          aria-label="Tutup"
+        >
           &times;
         </button>
         <h3 id="optItemName">Nama Menu</h3>
-        <hr style="margin: 15px 0" />
+        <hr class="modal-hr" />
 
         <div class="option-group">
-          <label><b>Tingkat Gula:</b></label>
+          <label for="optSugar"><b>Tingkat Gula:</b></label>
           <select id="optSugar">
             <option value="Normal Sugar">Normal Sugar</option>
             <option value="Less Sugar">Less Sugar</option>
@@ -148,7 +305,7 @@
         </div>
 
         <div class="option-group">
-          <label><b>Jumlah Es:</b></label>
+          <label for="optIce"><b>Jumlah Es:</b></label>
           <select id="optIce">
             <option value="Normal Ice">Normal Ice</option>
             <option value="Less Ice">Less Ice</option>
@@ -156,7 +313,7 @@
         </div>
 
         <div class="option-group">
-          <label><b>Catatan:</b></label>
+          <label for="optNote"><b>Catatan:</b></label>
           <textarea
             id="optNote"
             placeholder="Contoh: Tanpa sedotan, kopi lebih strong, dll"
@@ -172,7 +329,7 @@
     </div>
     <footer class="footer-dev">
       <p>
-        &copy; 2026 |
+        &copy; <span id="currentYear">2026</span> |
         <a
           href="https://instagram.com/syamiiiiiiiiiil"
           target="_blank"
@@ -184,13 +341,15 @@
       </p>
     </footer>
 
-    <div id="toast" class="toast">Produk ditambahkan!</div>
+    <div id="toast" class="toast" role="status" aria-live="polite">
+      Produk ditambahkan!
+    </div>
     <script>
-      // Script sederhana untuk update tahun otomatis
-      document.getElementById("currentYear").textContent =
-        new Date().getFullYear();
+      (function () {
+        const el = document.getElementById("currentYear");
+        if (el) el.textContent = new Date().getFullYear();
+      })();
     </script>
     <script type="module" src="script.js"></script>
   </body>
 </html>
-
