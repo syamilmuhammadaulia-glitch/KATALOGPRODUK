@@ -241,7 +241,11 @@ function updateUI() {
   if (!itemsContainer) return;
 
   if (cart.length === 0) {
-    itemsContainer.innerHTML = '<div class="cart-empty">Keranjang kosong</div>';
+    itemsContainer.innerHTML = `
+      <div class="cart-empty">
+        <i class="fas fa-shopping-bag" style="font-size: 3rem; opacity: 0.1; margin-bottom: 15px; display: block;"></i>
+        <p>Keranjangmu masih kosong</p>
+      </div>`;
   } else {
     itemsContainer.innerHTML = cart
       .map((i, idx) => {
@@ -254,19 +258,33 @@ function updateUI() {
                     <small>${i.qty} x Rp ${parseInt(i.price).toLocaleString()}</small>
                 </div>
                 <div class="cart-item-price">Rp ${(i.price * i.qty).toLocaleString()}</div>
-                <button type="button" class="cart-item-del" onclick="delCart(${idx})"><i class="fas fa-trash"></i></button>
+                <button type="button" class="cart-item-del" onclick="delCart(${idx})">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
             </div>
-            <div class="cart-item-options">Opsi: ${i.options.sugar}, ${i.options.ice} ${i.options.note ? `<br>Note: ${i.options.note}` : ""}</div>
+            <div class="cart-item-options">
+              <i class="fas fa-info-circle" style="margin-right: 5px; opacity: 0.5;"></i>
+              ${i.options.sugar}, ${i.options.ice} 
+              ${i.options.note ? `<div style="margin-top:4px; color: var(--brown);"><strong>Note:</strong> ${escapeHtml(i.options.note)}</div>` : ""}
+            </div>
         </div>`;
       })
       .join("");
   }
 
-  document.getElementById("totalPrice").innerText =
-    `Rp ${tot.toLocaleString()}`;
+  // Update Total Harga dengan animasi/style rapi
+  const totalPriceEl = document.getElementById("totalPrice");
+  if (totalPriceEl) {
+    totalPriceEl.innerText = `Rp ${tot.toLocaleString()}`;
+  }
+
+  // Update Counter Badge
   const cartCount = document.getElementById("cartCount");
-  if (cartCount)
-    cartCount.innerText = cart.reduce((acc, curr) => acc + curr.qty, 0);
+  if (cartCount) {
+    const totalItems = cart.reduce((acc, curr) => acc + curr.qty, 0);
+    cartCount.innerText = totalItems;
+    cartCount.style.display = totalItems > 0 ? "flex" : "none";
+  }
 }
 
 window.delCart = (i) => {
